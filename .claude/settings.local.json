@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "Bash(git init)",
+      "Bash(venv/Scripts/python.exe -c \"import sqlite3; conn = sqlite3.connect\\('spendly.db'\\); conn.execute\\('PRAGMA foreign_keys = ON'\\); print\\('Foreign keys enabled:', conn.execute\\('PRAGMA foreign_keys'\\).fetchone\\(\\)[0]\\)\")"
+    ]
+  }
+}
