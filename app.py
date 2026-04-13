@@ -1,7 +1,9 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request, redirect, url_for, flash
 from database.db import get_db, init_db, seed_db
+from werkzeug.security import generate_password_hash
 
 app = Flask(__name__)
+app.secret_key = "dev-secret-key-change-in-production"
 
 
 # ------------------------------------------------------------------ #
@@ -13,8 +15,53 @@ def landing():
     return render_template("landing.html")
 
 
-@app.route("/register")
+@app.route("/register", methods=["GET", "POST"])
 def register():
+    if request.method == "POST":
+        # Get form data
+        name = request.form.get("name", "").strip()
+        email = request.form.get("email", "").strip()
+        password = request.form.get("password", "")
+
+        # Validation
+        if not name or len(name) > 100:
+            flash("Name must be between 1-100 characters.")
+            return redirect(url_for("register"))
+
+        if not email or "@" not in email:
+            flash("Please enter a valid email address.")
+            return redirect(url_for("register"))
+
+        if len(password) < 8:
+            flash("Password must be at least 8 characters.")
+            return redirect(url_for("register"))
+
+        # Check for duplicate email
+        conn = get_db()
+        existing = conn.execute(
+            "SELECT id FROM users WHERE email = ?", (email,)
+        ).fetchone()
+
+        if existing:
+            conn.close()
+            flash("An account with this email already exists.")
+            return redirect(url_for("register"))
+
+        # Hash password and insert user
+        from datetime import datetime
+        password_hash = generate_password_hash(password)
+        created_at = datetime.now().isoformat()
+
+        conn.execute(
+            "INSERT INTO users (name, email, password_hash, created_at) VALUES (?, ?, ?, ?)",
+            (name, email, password_hash, created_at)
+        )
+        conn.commit()
+        conn.close()
+
+        flash("Account created. Please log in.")
+        return redirect(url_for("login"))
+
     return render_template("register.html")
 
 
