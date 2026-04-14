@@ -5,7 +5,16 @@
       "Bash(git init)",
       "Bash(venv/Scripts/python.exe -c \"import sqlite3; conn = sqlite3.connect\\('spendly.db'\\); conn.execute\\('PRAGMA foreign_keys = ON'\\); print\\('Foreign keys enabled:', conn.execute\\('PRAGMA foreign_keys'\\).fetchone\\(\\)[0]\\)\")",
       "Bash(python app.py)",
-      "Bash(curl -s -L -c cookies.txt -b cookies.txt http://localhost:5001/register)"
+      "Bash(curl -s -L -c cookies.txt -b cookies.txt http://localhost:5001/register)",
+      "Bash(curl -s -X POST http://127.0.0.1:5001/login -d \"email=demo@spendly.com&password=demo123\" -c /tmp/cookies.txt -L)",
+      "Bash(taskkill:*)",
+      "Bash(curl -s -I http://127.0.0.1:5001/login)",
+      "Bash(curl -s -X POST http://127.0.0.1:5001/login -d \"email=demo@spendly.com&password=demo123\" -v)",
+      "Bash(curl -s -X POST http://127.0.0.1:5001/login -d \"email=wrong@test.com&password=wrong\" -L)",
+      "Bash(curl -s -X POST http://127.0.0.1:5001/login -d \"email=demo@spendly.com&password=demo123\" -L)",
+      "Bash(netstat -ano)",
+      "Bash(findstr :5001)",
+      "Bash(curl -s -X POST http://127.0.0.1:5001/login -d \"email=demo@spendly.com&password=demo123\" -c /tmp/cookies.txt -b /tmp/cookies.txt -L)"
     ]
   }
 }
